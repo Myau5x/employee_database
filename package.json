@@ -1,0 +1,23 @@
+{
+  "name": "employee_database",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Myau5x/employee_database.git"
+  },
+  "author": "Olga Illarionova",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Myau5x/employee_database/issues"
+  },
+  "homepage": "https://github.com/Myau5x/employee_database#readme",
+  "dependencies": {
+    "inquirer": "^7.3.3",
+    "mysql": "^2.18.1"
+  }
+}
