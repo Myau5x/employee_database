@@ -74,8 +74,15 @@ function askDo() {
               break;
             case questions[0].choices[5]: /// View EE
               // code block
-              console.log(5)
-              askDo();
+              qu = `SELECT e.id, e.first_name, e.last_name, title, salary, name, m.first_name as Manager_firstName, 
+              m.last_name as Manager_lastName FROM employees as e
+              LEFT JOIN employees as m
+              ON e.manager_id = m.id
+              LEFT JOIN roles
+              ON e.role_id = roles.id
+              LEFT JOIN departments 
+              ON roles.department_id = departments.id;`
+              viewTable(qu);
               break;
             case questions[0].choices[6]: /// Update Role
               // code block
@@ -85,7 +92,7 @@ function askDo() {
               
             case questions[0].choices[7]: //exit
               // code block
-              console.log(4)
+              console.log('Bye');
               connection.end();
               break;
               
