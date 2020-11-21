@@ -23,8 +23,8 @@ const questions = [{
   name: "action"
 }]
 
-function selectDep(){
-  connection.query(`SELECT * FROM departments`, (err,res)=>{
+function viewTable(query){
+  connection.query(query, (err,res)=>{
       if(err) {
           console.log(err);
         } else {
@@ -61,13 +61,16 @@ function askDo() {
                 break;
             case questions[0].choices[3]: /// View Departments
               // code block
-              console.log(3)
-              selectDep();
+              //console.log(3)
+              qu = "SELECT * from departments;"
+              viewTable(qu);
               break;
             case questions[0].choices[4]: /// View Roles
               // code block
-              console.log(4)
-              askDo();
+              qu = `SELECT roles.id, title, salary, name as department FROM roles
+              LEFT JOIN departments 
+              ON roles.department_id = departments.id;`;
+              viewTable(qu);
               break;
             case questions[0].choices[5]: /// View EE
               // code block
