@@ -11,107 +11,16 @@ var connection = mysql.createConnection({
     user: "root",
   
     // Your password
-  password: "y8D8P&bSu",
-    database: "top_songsDB"
+    password: "y8D8P&bSu", ///add dotenv and hide pasword
+    database: "employeeDB" // 
   });
 
-  const questions = [        
-    {
-      type: "list",
-      choices: ['song by artist','artist more then once','song in range','specific song','exit'],
-      message: "What to do?",
-      name: "action"
-    },
-];
-
-function askArtist(){
-    inquirer
-    .prompt([{
-        type: 'input',
-        message: 'What artist?',
-        name: 'artist'
-    }])
-    .then((response)=>{
-        selectArtist(response.artist);
-    });
-}
-function askSong(){
-    inquirer
-    .prompt([{
-        type: 'input',
-        message: 'What song?',
-        name: 'song'
-    }])
-    .then((response)=>{
-        selectSong(response.song);
-    });
-}
-
-const rangeQ = [
-    {
-        type: 'input',
-        message: "start position?",
-        name: 'start'
-    },
-    {
-        type: 'input',
-        message: "end position?",
-        name: 'end'
-    },
-]
-function askRange(){
-    inquirer.prompt(rangeQ)
-    .then((response)=>{
-        selectRange(response.start,response.end)});
-}
-
-function selectRange(start, end){
-    connection.query(`SELECT * FROM top5000 WHERE id >= '${start}' and id <= '${end}'`, (err,res)=>{
-        if(err) {
-            console.log(err);
-          } else {
-            console.log(res);
-            askDo();
-          } 
-    })
-}
-
-function selectArtist(artist){
-    connection.query(`SELECT * FROM top5000 WHERE artist = '${artist}'`, (err,res)=>{
-        if(err) {
-            console.log(err);
-          } else {
-            console.log(res);
-            askDo();
-          } 
-    })
-}
-
-function selectSong(song){
-    connection.query(`SELECT * FROM top5000 WHERE song = '${song}'`, (err,res)=>{
-        if(err) {
-            console.log(err);
-          } else {
-            console.log(res);
-            askDo();
-          } 
-    })
-}
-
-
-function selectTwice(){
-    connection.query(`SELECT artist, count(song) as c FROM top5000 GROUP BY artist HAVING c > 1`, (err,res)=>{
-        if(err) {
-            console.log(err);
-          } else {
-            console.log(res);
-            askDo();
-          } 
-    })
-}
-
-
-
+const questions = [{
+  type: "list",
+  choices: ['Add department','Add role','Add employee','View departments','View roles', 'View employees','Update employee role','Exit'],
+  message: "What to do?",
+  name: "action"
+}]
 
 function askDo() {
     //console.log("goods")
@@ -120,28 +29,44 @@ function askDo() {
     .then((response) => {
         console.log(response.action);
         switch(response.action) {
-            case questions[0].choices[0]: ///specific artist
+            case questions[0].choices[0]: ///Add dep
               // code block
-              console.log(0)
-              //askDo()
-              askArtist();
+              console.log(0);
+              askDo();
+              
               break;
-            case questions[0].choices[1]: /// more then two times
+            case questions[0].choices[1]: /// Add role
               // code block
               console.log(1);
-              selectTwice();
+              askDo();
               break;
-            case questions[0].choices[2]: // song in range
+            case questions[0].choices[2]: // Add EE
                 // code block
-                console.log(2)
-                askRange();
+                console.log(2);
+                askDo();
                 break;
-            case questions[0].choices[3]: /// specific song
+            case questions[0].choices[3]: /// View Departments
               // code block
               console.log(3)
-              askSong();
+              askDo();
               break;
-            case questions[0].choices[4]: //exit
+            case questions[0].choices[4]: /// View Roles
+              // code block
+              console.log(4)
+              askDo();
+              break;
+            case questions[0].choices[5]: /// View EE
+              // code block
+              console.log(5)
+              askDo();
+              break;
+            case questions[0].choices[6]: /// Update Role
+              // code block
+              console.log(3)
+              askDo();
+              break;
+              
+            case questions[0].choices[7]: //exit
               // code block
               console.log(4)
               connection.end();
@@ -157,10 +82,11 @@ function askDo() {
   
   }
 
+
 connection.connect(function(err) {
     if (err) throw err;
     console.log("connected as id " + connection.threadId + "\n");
     //console.log(questions);
-    askDo();
+    askDo()
 
   });
