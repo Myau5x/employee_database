@@ -1,7 +1,8 @@
 const inquirer = require("inquirer");
 const mysql = require("mysql");
+const cTable = require('console.table');
 
-var connection = mysql.createConnection({
+const connection = mysql.createConnection({
     host: "localhost",
   
     // Your port; if not 3306
@@ -21,6 +22,19 @@ const questions = [{
   message: "What to do?",
   name: "action"
 }]
+
+function selectDep(){
+  connection.query(`SELECT * FROM departments`, (err,res)=>{
+      if(err) {
+          console.log(err);
+        } else {
+          const table = cTable.getTable(res)
+          console.log(table);
+          askDo();
+        } 
+  })
+}
+
 
 function askDo() {
     //console.log("goods")
@@ -48,7 +62,7 @@ function askDo() {
             case questions[0].choices[3]: /// View Departments
               // code block
               console.log(3)
-              askDo();
+              selectDep();
               break;
             case questions[0].choices[4]: /// View Roles
               // code block
