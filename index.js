@@ -62,6 +62,7 @@ function insRole(response,dep_id){
   })
 }
 
+
 function insEE(response,role_id){
   let query = "INSERT INTO employees SET ?"
   if (response.manager === 'Null'  ){
@@ -92,13 +93,83 @@ function insEE(response,role_id){
   }
 }
 
+function updEE(response,role_id){
+  let query = "UPDATE employees SET ? WHERE ?"
+  let ee_id = parseInt (response.ee.split(' ')[0]);
+  connection.query(query,[
+    {
+      role_id: role_id},
+      {id: ee_id
+    }],(err)=>{
+      if (err){ console.log(err)}
+      else{
+        askDo()
+      }
+    })
+}
+
+
+function updateRole(){
+  connection.query("SELECT * from roles",(err,resRoles)=>{
+    if(err){
+      console.log(err);
+    }
+    else{
+      connection.query("SELECT * from employees",(err,resEE)=>{
+        if(err){
+          console.log(err);
+        }
+        else{
+          let roles = []
+          for (var i=0;i<resRoles.length;i++){
+            roles.push(resRoles[i].title);
+          }
+          //console.log(resEE);
+          let managers = []
+          for (var i=0;i<resEE.length;i++){
+            managers.push( `${resEE[i].id} ${resEE[i].first_name} ${resEE[i].last_name}`);
+          }
+          const questionsEE = [
+            {
+              type: "rawlist",
+              choices: managers,
+              message: "Choose Employee",
+              name: "ee"
+            },
+          {
+            type: "list",
+            choices: roles,
+            message: "Choose role",
+            name: "role"
+          },
+          
+          ];
+          inquirer.prompt(questionsEE).then((response)=>{
+            //console.log(response.manager);
+            let chosenItem;
+            for (var i = 0; i < resRoles.length; i++) {
+              if (resRoles[i].title === response.role) {
+                chosenItem = resRoles[i];
+              }
+            }
+            updEE(response,chosenItem.id);
+
+            //askDo(); ///later we change to insert EE and add logic about role and manager
+          })
+        }
+      })
+    }
+  })
+}
+
+
 function askEE(){
   connection.query("SELECT * from roles",(err,resRoles)=>{
     if(err){
       console.log(err);
     }
     else{
-      connection.query("Select * from employees",(err,resEE)=>{
+      connection.query("SELECT * from employees",(err,resEE)=>{
         if(err){
           console.log(err);
         }
@@ -136,8 +207,8 @@ function askEE(){
           }
           ];
           inquirer.prompt(questionsEE).then((response)=>{
-            console.log(response.manager);
-            let chosenRole;
+            //console.log(response.manager);
+            let chosenItem;
             for (var i = 0; i < resRoles.length; i++) {
               if (resRoles[i].title === response.role) {
                 chosenItem = resRoles[i];
@@ -232,7 +303,7 @@ function askDo() {
               break;
             case questions[0].choices[2]: // Add EE
               // code block
-              console.log(2);
+              //console.log(2);
               askEE();
               break;
             case questions[0].choices[3]: /// View Departments
@@ -262,8 +333,8 @@ function askDo() {
               break;
             case questions[0].choices[6]: /// Update Role
               // code block
-              console.log(3)
-              askDo();
+              //console.log(6)
+              updateRole();
               break;
               
             case questions[0].choices[7]: //exit
