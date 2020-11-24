@@ -11,8 +11,8 @@
 To install please use: 
 `npm init` then  `npm install`
 ## Usage
-1. Create database using schema provided in `empl.sql` 
-2. Create `.env` file that will contains user and password for database
+1. Create database using schema provided in `empl.sql`. `seed.sql` example of creating initial database content.
+2. Create `.env` file that will contains user and password for database connection.
 3. To run CLI use 
 `node index.js`
 ## License
@@ -22,9 +22,9 @@ Command line interface for work with employee database. Database contains 3 tabl
 View of tables is human-readable, for example, you will see in Roles view not Foreign Key for Departments table but Departments name. 
 ![screenshot](./screenshot/cli.png)
 
-You can see video example [here]() 
+You can see video example [here](https://drive.google.com/file/d/19HtlXhRFX4CAsTmcP3JpHKDJt0JPDZ_w/view?usp=sharing) 
 ## Future Improvements
-In future plans implement: deleting items, upgrading Managers, ...
+In future plans implement: deleting items, upgrading Managers, validating inputs.
 ## Questions
 For questionts please contact [me](https://github.com/Myau5x) at ola.illari@gmail.com
  
