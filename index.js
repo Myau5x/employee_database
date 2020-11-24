@@ -35,6 +35,40 @@ function viewTable(query){
   })
 }
 
+function insDep(name){
+  let query = "INSERT INTO departments SET ?"
+  connection.query(query,{name:name},(err,res)=>{
+    if(err){
+      console.log(err);
+    } else {
+      askDo()
+    }
+  })
+}
+
+function askRole(){
+  connection.query("SELECT * from departments",(err,res)=>{
+    if(err){
+      console.log(err);
+    } else {
+      askDo();
+    }
+  })
+}
+
+function askDep(){
+  inquirer.
+  prompt([{
+    type: "input",
+    message: "Enter department name",
+    name: "name"
+  }])
+  .then((response)=>{
+    console.log(response.name);
+    insDep(response.name);
+  })
+}
+
 
 function askDo() {
     //console.log("goods")
@@ -45,14 +79,15 @@ function askDo() {
         switch(response.action) {
             case questions[0].choices[0]: ///Add dep
               // code block
-              console.log(0);
-              askDo();
+              //console.log(0); ///Ask Name, than insert
+
+              askDep();
               
               break;
             case questions[0].choices[1]: /// Add role
-              // code block
-              console.log(1);
-              askDo();
+              // code block // Ask title, ask salary , create department and ask departmnet, and then insert 
+              //console.log(1);
+              askRole();
               break;
             case questions[0].choices[2]: // Add EE
                 // code block
