@@ -287,7 +287,8 @@ function askDo() {
     inquirer
     .prompt(questions)
     .then((response) => {
-        console.log(response.action);
+        //console.log(response.action);
+        let qu = "";
         switch(response.action) {
             case questions[0].choices[0]: ///Add dep
               // code block
@@ -321,8 +322,7 @@ function askDo() {
               break;
             case questions[0].choices[5]: /// View EE
               // code block
-              qu = `SELECT e.id, e.first_name, e.last_name, title, salary, name, m.first_name as Manager_firstName, 
-              m.last_name as Manager_lastName FROM employees as e
+              qu = `SELECT e.id, e.first_name, e.last_name, title, salary, name, CONCAT(m.first_name,' ',m.last_name) as Manager FROM employees as e
               LEFT JOIN employees as m
               ON e.manager_id = m.id
               LEFT JOIN roles
