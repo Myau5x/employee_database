@@ -46,12 +46,153 @@ function insDep(name){
   })
 }
 
+function insRole(response,dep_id){
+  let query = "INSERT INTO roles SET ?"
+  connection.query(query,{
+    title: response.title,
+    salary: response.salary,
+    department_id: dep_id
+  },(err)=>{
+    if(err){
+      console.log(err);
+    }
+    else {
+      askDo();
+    }
+  })
+}
+
+function insEE(response,role_id){
+  let query = "INSERT INTO employees SET ?"
+  if (response.manager === 'Null'  ){
+    connection.query(query,{
+      first_name: response.fname,
+      last_name: response.lname,
+      role_id: role_id
+    },(err)=>{
+      if (err){ console.log(err)}
+      else{
+        askDo()
+      }
+    })
+  }
+  else{
+    let man_id = parseInt (response.manager.split(' ')[0]);
+    connection.query(query,{
+      first_name: response.fname,
+      last_name: response.lname,
+      role_id: role_id,
+      manager_id: man_id
+    },(err)=>{
+      if (err){ console.log(err)}
+      else{
+        askDo()
+      }
+    })
+  }
+}
+
+function askEE(){
+  connection.query("SELECT * from roles",(err,resRoles)=>{
+    if(err){
+      console.log(err);
+    }
+    else{
+      connection.query("Select * from employees",(err,resEE)=>{
+        if(err){
+          console.log(err);
+        }
+        else{
+          let roles = []
+          for (var i=0;i<resRoles.length;i++){
+            roles.push(resRoles[i].title);
+          }
+          //console.log(resEE);
+          let managers = ["Null"]
+          for (var i=0;i<resEE.length;i++){
+            managers.push( `${resEE[i].id} ${resEE[i].first_name} ${resEE[i].last_name}`);
+          }
+          const questionsEE = [{
+            type: "input",
+            message: "Enter First Name",
+            name: "fname"
+          },
+          {
+            type: "input",
+            message: "Enter Last Name",
+            name: "lname"
+          },
+          {
+            type: "list",
+            choices: roles,
+            message: "Choose role",
+            name: "role"
+          },
+          {
+            type: "rawlist",
+            choices: managers,
+            message: "Choose manager",
+            name: "manager"
+          }
+          ];
+          inquirer.prompt(questionsEE).then((response)=>{
+            console.log(response.manager);
+            let chosenRole;
+            for (var i = 0; i < resRoles.length; i++) {
+              if (resRoles[i].title === response.role) {
+                chosenItem = resRoles[i];
+              }
+            }
+            insEE(response,chosenItem.id);
+
+            //askDo(); ///later we change to insert EE and add logic about role and manager
+          })
+        }
+      })
+    }
+  })
+}
+
+
 function askRole(){
   connection.query("SELECT * from departments",(err,res)=>{
     if(err){
       console.log(err);
-    } else {
-      askDo();
+    } else { 
+      ///Ask title, ask salary , create department and ask departmnet
+      let deps = []
+      for (var i =0; i<res.length;i++){
+        deps.push(res[i].name);
+      }
+      const questionsRole = [{
+        type: "input",
+        message: "Enter role title?",
+        name: "title"
+      },
+      {
+        type: "input",
+        message: "Enter role salary",
+        name: "salary"
+      },
+      {
+        type: "list",
+        choices: deps,
+        message: "Choose department",
+        name: "department"
+      }];
+      inquirer.prompt(questionsRole).then((response)=>{
+        console.log(response.title);
+        /// find dep id
+        let dep_id = 0;
+        let chosenItem;
+        for (var i = 0; i < res.length; i++) {
+          if (res[i].name === response.department) {
+            chosenItem = res[i];
+          }
+        }
+        dep_id = chosenItem.id;
+        insRole(response,dep_id);
+      })
     }
   })
 }
@@ -90,10 +231,10 @@ function askDo() {
               askRole();
               break;
             case questions[0].choices[2]: // Add EE
-                // code block
-                console.log(2);
-                askDo();
-                break;
+              // code block
+              console.log(2);
+              askEE();
+              break;
             case questions[0].choices[3]: /// View Departments
               // code block
               //console.log(3)
