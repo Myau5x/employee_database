@@ -2,6 +2,9 @@ const inquirer = require("inquirer");
 const mysql = require("mysql");
 const cTable = require('console.table');
 
+require("dotenv").config();
+
+
 const connection = mysql.createConnection({
     host: "localhost",
   
@@ -9,10 +12,10 @@ const connection = mysql.createConnection({
     port: 3306,
   
     // Your username
-    user: "root",
+    user: process.env.DB_USER,
   
     // Your password
-    password: "y8D8P&bSu", ///add dotenv and hide pasword
+    password: process.env.DB_PASS, ///add dotenv and hide pasword
     database: "employeeDB" // 
   });
 
